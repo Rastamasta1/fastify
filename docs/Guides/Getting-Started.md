@@ -600,6 +600,34 @@ Then run your server with:
 npm start
 ```
 
+Running `fastify generate` scaffolds a more complete project instead of a
+single `server.js` file. Its entry point is an `app.js` that registers
+[`@fastify/autoload`](https://github.com/fastify/fastify-autoload) twice: once
+for the `plugins` folder, which holds support plugins shared across the whole
+application, and once for the `routes` folder, where each file becomes a route
+plugin.
+
+```js
+// app.js
+'use strict'
+
+const path = require('node:path')
+const AutoLoad = require('@fastify/autoload')
+
+module.exports = async function (fastify, opts) {
+  fastify.register(AutoLoad, {
+    dir: path.join(__dirname, 'plugins')
+  })
+
+  fastify.register(AutoLoad, {
+    dir: path.join(__dirname, 'routes')
+  })
+}
+```
+
+As with a hand-written `server.js`, the generated project is started with
+`fastify start`.
+
 ### Slides and Videos
 <a id="slides"></a>
 
